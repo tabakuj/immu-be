@@ -1,0 +1,20 @@
+We would like to invite you to the next step, a home assignment, which will be used to assess the quality of your code and your skill level. Please find the instructions below:
+
+Please have a look at our cloud service immudb Vault and build a simple application (Backend + Frontend) around it with the following requirements:
+Application is storing accounting information within immudb Vault with the following structure: account number (unique), account name, iban, address, amount, type (sending, receiving)
+Application has an API to add and retrieve accounting information
+Application has a frontend that displays accounting information and allows to create new records.
+The solution should:
+Have a readme
+Have a documented API
+Have docker-compose so it is easy to run.
+Resources:
+
+immudb Vault documentation: https://vault.immudb.io/docs/
+API reference: https://vault.immudb.io/docs/api/v1
+
+If you have any questions, feel free to refer to Dennis or Adam (cc).
+
+Please let us know once you can estimate when you will be ready (typically doable within one week, max. deadline is 2 weeks).
+
+Kindly send us your solution by email or share it as a GitHub repository so that we can review it before.
