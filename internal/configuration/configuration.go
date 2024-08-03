@@ -8,6 +8,7 @@ import (
 
 type ApplicationConfiguration struct {
 	DbConnectionString string
+	Port               string
 }
 
 func LoadConfiguration() (*ApplicationConfiguration, error) {

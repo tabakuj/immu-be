@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/sirupsen/logrus"
-	"immudb/configuration"
+	"immudb/internal"
+	"immudb/internal/configuration"
 )
 
 func main() {
@@ -20,6 +20,7 @@ func setupApi() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(appConfigurations)
-	return nil
+
+	_, err = internal.NewServer(appConfigurations.Port)
+	return err
 }
