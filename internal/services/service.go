@@ -8,7 +8,7 @@ import (
 
 type Service interface {
 	CreateAccountInfo(ctx context.Context, ata *models.AccountInfo) (*models.AccountInfo, error)
-	GetAllAccountInfos(ctx context.Context) ([]*models.AccountInfo, error)
+	GetAllAccountInfos(ctx context.Context, page, pageSize int) ([]*models.AccountInfo, error)
 	GetAccountInfoById(ctx context.Context, Id uint) (*models.AccountInfo, error)
 }
 

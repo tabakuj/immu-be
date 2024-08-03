@@ -7,6 +7,11 @@ import (
 	"net/http"
 )
 
+const (
+	DefaultPageSize = 100
+	DefaultPage     = 1
+)
+
 type AccountInfoDto struct {
 	AccountNumber uint                `json:"account_number"`
 	AccountName   string              `json:"account_name"`
@@ -17,13 +22,16 @@ type AccountInfoDto struct {
 }
 
 func (h *Handler) GetAccountInfos(c *gin.Context) {
-	// in real life applications we need to consider using pagination
-	//type QueryParameter struct {
-	//	Limit  string `form:"limit,default=5" binding:"numeric"`
-	//	Offset string `form:"offset,default=0" binding:"numeric"`
-	//}
+	page, err := getQueryParamUInt(c, "page")
+	if err != nil {
+		page = DefaultPage
+	}
+	pageSize, err := getQueryParamUInt(c, "pageSize")
+	if err != nil {
+		pageSize = DefaultPageSize
+	}
 
-	result, err := h.Service.GetAllAccountInfos(c.Request.Context())
+	result, err := h.Service.GetAllAccountInfos(c.Request.Context(), page, pageSize)
 	if err != nil {
 		AbortWithMessage(c, http.StatusInternalServerError, err, "failed to load accountInfos")
 		return
@@ -78,8 +86,8 @@ func convertAccountInfoToDTO(sc *models.AccountInfo) *AccountInfoDto {
 		return nil
 	}
 	return &AccountInfoDto{
-		AccountNumber: sc.AccountNumber,
-		AccountName:   sc.AccountName,
+		AccountNumber: sc.Id,
+		AccountName:   sc.Name,
 		Iban:          sc.Iban,
 		Address:       sc.Address,
 		Amount:        sc.Amount,
@@ -94,12 +102,12 @@ func bindToAccountInfo(c *gin.Context) (*models.AccountInfo, error) {
 		return nil, err
 	}
 	authorData := models.AccountInfo{
-		AccountNumber: input.AccountNumber,
-		AccountName:   input.AccountName,
-		Iban:          input.Iban,
-		Address:       input.Address,
-		Amount:        input.Amount,
-		Type:          input.Type,
+		Id:      input.AccountNumber,
+		Name:    input.AccountName,
+		Iban:    input.Iban,
+		Address: input.Address,
+		Amount:  input.Amount,
+		Type:    input.Type,
 	}
 	return &authorData, nil
 }

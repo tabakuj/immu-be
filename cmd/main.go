@@ -21,6 +21,6 @@ func setupApi() error {
 		return err
 	}
 
-	_, err = internal.NewServer(appConfigurations.Port)
+	_, err = internal.NewServer(appConfigurations)
 	return err
 }

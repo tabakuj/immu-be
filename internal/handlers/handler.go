@@ -58,6 +58,12 @@ func getParamUInt(c *gin.Context, paramName string) (uint, error) {
 	return uint(idValue), err
 }
 
+func getQueryParamUInt(c *gin.Context, paramName string) (int, error) {
+	id := c.Query(paramName)
+	idValue, err := strconv.ParseInt(id, 10, 64)
+	return int(idValue), err
+}
+
 func returnOk(c *gin.Context, status int, data interface{}) {
 	c.IndentedJSON(status, Response{
 		Data: data,
