@@ -28,7 +28,7 @@ func (s *service) GetAllAccountInfos(ctx context.Context) ([]*models.AccountInfo
 	return s.Db.GetAllAccountInfos(ctx)
 }
 
-func (s *service) GetAccountInfoById(ctx context.Context, Id string) (*models.AccountInfo, error) {
+func (s *service) GetAccountInfoById(ctx context.Context, Id uint) (*models.AccountInfo, error) {
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
@@ -43,20 +43,21 @@ func (s *service) validateAccount(data *models.AccountInfo) error {
 	}
 
 	if data.AccountNumber != 0 {
-		return NewServiceError("invalid accountNumber for the account")
+		return NewServiceError("invalid accountNumber for the account, do not specify accountNumber")
 	}
 
-	if data.Iban != "" {
+	if data.Iban == "" {
 		return NewServiceError("invalid iban for the account")
 	}
+	// we might need to add a logic to check if iban already exist into our system since its supposed to be unique
+	// same logic might be considered for name
 
-	if data.AccountName != "" {
+	if data.AccountName == "" {
 		return NewServiceError("invalid accountName for the account")
 	}
 
 	if data.Type == nil {
 		return NewServiceError("invalid type for the account")
 	}
-
 	return nil
 }

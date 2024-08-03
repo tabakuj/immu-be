@@ -6,6 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"immudb/internal/services"
 	"net/http"
+	"strconv"
 )
 
 type Handler struct {
@@ -15,7 +16,7 @@ type Handler struct {
 
 type Response struct {
 	Data interface{} `json:"data"`
-	Err  error       `json:"error_message"`
+	Err  string      `json:"error_message"`
 }
 
 func NewHandler(bookService services.Service, router *gin.Engine) *Handler {
@@ -47,8 +48,14 @@ func AbortWithMessage(c *gin.Context, status int, err error, message string) {
 	}
 
 	c.AbortWithStatusJSON(status, Response{
-		Err: errors.New(message),
+		Err: message,
 	})
+}
+
+func getParamUInt(c *gin.Context, paramName string) (uint, error) {
+	id := c.Params.ByName(paramName)
+	idValue, err := strconv.ParseUint(id, 10, 64)
+	return uint(idValue), err
 }
 
 func returnOk(c *gin.Context, status int, data interface{}) {

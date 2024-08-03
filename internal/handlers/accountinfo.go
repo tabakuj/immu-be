@@ -36,8 +36,8 @@ func (h *Handler) GetAccountInfos(c *gin.Context) {
 }
 
 func (h *Handler) GetAccountInfo(c *gin.Context) {
-	id := c.Params.ByName("id")
-	if id == "" {
+	id, err := getParamUInt(c, "id")
+	if err != nil {
 		AbortWithMessage(c, http.StatusBadRequest, fmt.Errorf("please specify id"), "id is required")
 		return
 	}
@@ -78,12 +78,12 @@ func convertAccountInfoToDTO(sc *models.AccountInfo) *AccountInfoDto {
 		return nil
 	}
 	return &AccountInfoDto{
-		//AccountNumber: "" + sc.AccountNumber,
-		AccountName: sc.AccountName,
-		Iban:        sc.Iban,
-		Address:     sc.Address,
-		Amount:      sc.Amount,
-		Type:        sc.Type,
+		AccountNumber: sc.AccountNumber,
+		AccountName:   sc.AccountName,
+		Iban:          sc.Iban,
+		Address:       sc.Address,
+		Amount:        sc.Amount,
+		Type:          sc.Type,
 	}
 }
 
@@ -94,12 +94,12 @@ func bindToAccountInfo(c *gin.Context) (*models.AccountInfo, error) {
 		return nil, err
 	}
 	authorData := models.AccountInfo{
-		//AccountNumber: input.AccountNumber,
-		AccountName: input.AccountName,
-		Iban:        input.Iban,
-		Address:     input.Address,
-		Amount:      input.Amount,
-		Type:        input.Type,
+		AccountNumber: input.AccountNumber,
+		AccountName:   input.AccountName,
+		Iban:          input.Iban,
+		Address:       input.Address,
+		Amount:        input.Amount,
+		Type:          input.Type,
 	}
 	return &authorData, nil
 }

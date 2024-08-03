@@ -9,7 +9,7 @@ import (
 type Service interface {
 	CreateAccountInfo(ctx context.Context, ata *models.AccountInfo) (*models.AccountInfo, error)
 	GetAllAccountInfos(ctx context.Context) ([]*models.AccountInfo, error)
-	GetAccountInfoById(ctx context.Context, Id string) (*models.AccountInfo, error)
+	GetAccountInfoById(ctx context.Context, Id uint) (*models.AccountInfo, error)
 }
 
 type service struct {
