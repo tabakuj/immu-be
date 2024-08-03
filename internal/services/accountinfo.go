@@ -2,7 +2,9 @@ package services
 
 import (
 	"context"
+	"immudb/internal/errors"
 	"immudb/internal/models"
+	"net/http"
 )
 
 func (s *service) CreateAccountInfo(ctx context.Context, data *models.AccountInfo) (*models.AccountInfo, error) {
@@ -39,25 +41,25 @@ func (s *service) GetAccountInfoById(ctx context.Context, Id uint) (*models.Acco
 
 func (s *service) validateAccount(data *models.AccountInfo) error {
 	if data == nil {
-		return NewServiceError("invalid input")
+		return errors.NewServiceError("invalid input", http.StatusBadRequest)
 	}
 
 	if data.Id != 0 {
-		return NewServiceError("invalid accountNumber for the account, do not specify accountNumber")
+		return errors.NewServiceError("invalid accountNumber for the account, do not specify accountNumber", http.StatusBadRequest)
 	}
 
 	if data.Iban == "" {
-		return NewServiceError("invalid iban for the account")
+		return errors.NewServiceError("invalid iban for the account", http.StatusBadRequest)
 	}
 	// we might need to add a logic to check if iban already exist into our system since its supposed to be unique
 	// same logic might be considered for name
 
 	if data.Name == "" {
-		return NewServiceError("invalid accountName for the account")
+		return errors.NewServiceError("invalid accountName for the account", http.StatusBadRequest)
 	}
 
 	if data.Type == nil {
-		return NewServiceError("invalid type for the account")
+		return errors.NewServiceError("invalid type for the account", http.StatusBadRequest)
 	}
 	return nil
 }

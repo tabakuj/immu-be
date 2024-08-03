@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	errors2 "immudb/internal/errors"
 	"immudb/internal/services"
-	"net/http"
 	"strconv"
 )
 
@@ -41,9 +41,9 @@ func AbortWithMessage(c *gin.Context, status int, err error, message string) {
 	logrus.WithError(err).Error(message)
 
 	// if custom validation error update status and message
-	var badRequest *services.ServiceError
+	var badRequest *errors2.ServiceError
 	if errors.As(err, &badRequest) {
-		status = http.StatusBadRequest
+		status = badRequest.Status
 		message = err.Error()
 	}
 

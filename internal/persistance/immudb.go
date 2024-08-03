@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/sirupsen/logrus"
+	cerror "immudb/internal/errors"
 	"immudb/internal/models"
 	"io"
 	"net/http"
@@ -216,7 +217,8 @@ func (db *ImmmuDB) GetAccountInfoById(ctx context.Context, Id uint) (*models.Acc
 	if result != nil && len(result.Revisions) > 0 {
 		return db.convertModelToAccountInfo(result.Revisions[0].Document), nil
 	}
-	return nil, fmt.Errorf("account info not found")
+	// normally this doesn't need to have acesss to this but i am leaving it for simplity
+	return nil, cerror.NewServiceError("account info not found", http.StatusNotFound)
 }
 
 // GetId this does not guarantee uniqueness in case of vertical scaling but for purposes of this looks ok
