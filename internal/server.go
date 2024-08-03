@@ -18,7 +18,7 @@ func NewServer(config *configuration.ApplicationConfiguration) (*Server, error) 
 	router := gin.Default()
 	router.Use(handlers.CORSMiddleware())
 
-	db := persistance.NewImmmuDB(config.ImmuDbUrl, config.ImmuDbApiKey, config.ImmudbSearchUrl)
+	db := persistance.NewImmmuDB(config.ImmuDbUrl, config.ImmuDbApiKey, config.ImmudbSearchUrl, config.ImmuDbApiReadKey)
 
 	accountService, err := services.NewService(db)
 	if err != nil {

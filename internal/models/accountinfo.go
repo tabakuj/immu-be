@@ -8,8 +8,8 @@ const (
 )
 
 type AccountInfo struct {
-	Id      uint // this name is used so we can have a index on this
-	Name    string
+	Id      uint   `json:"id"` // this name is used so we can have a index on this
+	Name    string `json:"name"`
 	Iban    string
 	Address *string // this is used for simplicity normally it needs to be a little bit more complex
 	Amount  float64 // Maybe It would be better if int64

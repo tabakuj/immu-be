@@ -1,17 +1,20 @@
 package persistance
 
-import "immudb/internal/models"
-
 type CreateResponse struct {
 	DocumentID    string `json:"documentId"`
 	TransactionID string `json:"transactionId"`
 }
+type GetAllSimpleRequest struct {
+	Page    int `json:"page"`
+	PerPage int `json:"perPage"`
+}
 
 type GetAllRequest struct {
-	Query   *Query `json:"query"`
-	Page    int    `json:"page"`
-	PerPage int    `json:"perPage"`
+	Query   Query `json:"query"`
+	Page    int   `json:"page"`
+	PerPage int   `json:"perPage"`
 }
+
 type FieldComparison struct {
 	Field    string      `json:"field"`
 	Operator string      `json:"operator"`
@@ -48,7 +51,7 @@ type VaultMd struct {
 }
 
 type Revisions struct {
-	Document      models.AccountInfo `json:"document"` // if you are taking more than one document this needs to be either interface or Generic type
-	Revision      string             `json:"revision"`
-	TransactionID string             `json:"transactionId"`
+	Document      interface{} `json:"document"`
+	Revision      string      `json:"revision"`
+	TransactionID string      `json:"transactionId"`
 }

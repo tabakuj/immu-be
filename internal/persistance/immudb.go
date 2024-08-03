@@ -16,21 +16,22 @@ import (
 )
 
 type ImmmuDB struct {
-	url     string
-	apiKey  string
-	search  string
-	headers map[string]string
-	mx      sync.Mutex
+	url        string
+	apiKey     string
+	readApiKey string
+	searchUrl  string
+	headers    map[string]string
+	mx         sync.Mutex
 }
 
-func NewImmmuDB(url, apiKey, search string) *ImmmuDB {
+func NewImmmuDB(url, apiKey, search, searchApiKey string) *ImmmuDB {
 	return &ImmmuDB{
-		url:    url,
-		apiKey: apiKey,
-		search: search,
+		url:        url,
+		apiKey:     apiKey,
+		searchUrl:  search,
+		readApiKey: searchApiKey,
 		headers: map[string]string{
 			"accept":       "application/json",
-			"X-API-Key":    apiKey,
 			"Content-Type": "application/json",
 		},
 		mx: sync.Mutex{},
@@ -52,6 +53,7 @@ func (db *ImmmuDB) doCreateHttpCall(ctx context.Context, input interface{}) (*Cr
 		logrus.WithError(err).Error("http request failed")
 		return nil, err
 	}
+	db.headers["X-API-Key"] = db.apiKey
 	for key, value := range db.headers {
 		req.Header.Set(key, value)
 	}
@@ -82,7 +84,7 @@ func (db *ImmmuDB) doCreateHttpCall(ctx context.Context, input interface{}) (*Cr
 	return nil, fmt.Errorf("http call failed with status code: %d", resp.StatusCode)
 }
 
-func (db *ImmmuDB) doGetAllHttpCall(ctx context.Context, input GetAllRequest) (*GetAllResponse, error) {
+func (db *ImmmuDB) doGetAllHttpCall(ctx context.Context, input interface{}) (*GetAllResponse, error) {
 	// usually this needs to be taken from the configurations but for this sample application i am leaving it here
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -92,15 +94,15 @@ func (db *ImmmuDB) doGetAllHttpCall(ctx context.Context, input GetAllRequest) (*
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", db.url, bytes.NewBuffer(jsonData))
+	req, err := http.NewRequestWithContext(ctx, "POST", db.searchUrl, bytes.NewBuffer(jsonData))
 	if err != nil {
 		logrus.WithError(err).Error("http request failed")
 		return nil, err
 	}
+	db.headers["X-API-Key"] = db.readApiKey
 	for key, value := range db.headers {
 		req.Header.Set(key, value)
 	}
-
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -154,7 +156,7 @@ func (db *ImmmuDB) GetAllAccountInfos(ctx context.Context, pageNr, pageSize int)
 		return nil, ctx.Err()
 	default:
 	}
-	req := GetAllRequest{Page: pageNr, PerPage: pageSize}
+	req := GetAllSimpleRequest{Page: pageNr, PerPage: pageSize}
 	result, err := db.doGetAllHttpCall(ctx, req)
 	if err != nil {
 		return nil, err
@@ -163,7 +165,10 @@ func (db *ImmmuDB) GetAllAccountInfos(ctx context.Context, pageNr, pageSize int)
 	var output []*models.AccountInfo
 	if result != nil && result.Revisions != nil {
 		for _, value := range result.Revisions {
-			output = append(output, &value.Document)
+			tmp := db.convertModelToAccountInfo(value.Document)
+			if tmp != nil {
+				output = append(output, tmp)
+			}
 		}
 	}
 
@@ -180,7 +185,7 @@ func (db *ImmmuDB) GetAccountInfoById(ctx context.Context, Id uint) (*models.Acc
 	default:
 	}
 	requestData := GetAllRequest{
-		Query: &Query{
+		Query: Query{
 			Expressions: []Expression{
 				{
 					FieldComparisons: []FieldComparison{
@@ -209,14 +214,25 @@ func (db *ImmmuDB) GetAccountInfoById(ctx context.Context, Id uint) (*models.Acc
 	}
 
 	if result != nil && len(result.Revisions) > 0 {
-		return &result.Revisions[0].Document, nil
+		return db.convertModelToAccountInfo(result.Revisions[0].Document), nil
 	}
 	return nil, fmt.Errorf("account info not found")
 }
 
 // GetId this does not guarantee uniqueness in case of vertical scaling but for purposes of this looks ok
 func (db *ImmmuDB) GetId() uint {
-	db.mx.Lock()
-	defer db.mx.Unlock()
 	return uint(time.Now().UnixNano())
+}
+
+func (db *ImmmuDB) convertModelToAccountInfo(sc interface{}) *models.AccountInfo {
+	jsonString, err := json.Marshal(sc)
+	if err != nil {
+		return nil
+	}
+	var result models.AccountInfo
+	err = json.Unmarshal(jsonString, &result)
+	if err != nil {
+		return nil
+	}
+	return &result
 }

@@ -12,6 +12,7 @@ type ApplicationConfiguration struct {
 	ImmuDbUrl          string
 	ImmudbSearchUrl    string
 	ImmuDbApiKey       string // for simplicity i am taking this from here but normally with would be taken from env variable or some other  secret
+	ImmuDbApiReadKey   string
 }
 
 func LoadConfiguration() (*ApplicationConfiguration, error) {
