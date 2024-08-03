@@ -2,5 +2,4 @@ DbConnectionString: "test:test@Admin123+@tcp(127.0.0.1:3306)/db?charset=utf8mb4&
 Port: 8080
 ImmuDbUrl: "https://vault.immudb.io/ics/api/v1/ledger/default/collection/default/document"
 ImmuDbApiKey: "default.taBUBwUIt0W-4jpPY_3vAQ.Emz34LJV5npNzz17jpyA54ZYmHNm3sdqvM3EGxRMshfjmCUJ"
-ImmuDbApiReadKey: "defaultro.yfMECAK4XxxMzeJ9JzkjZg.3z5S_D05bcaqSy_BbhV-Wp5zgudbbgQJ-n8DQHnIvNXCOSzF"
 ImmudbSearchUrl: "https://vault.immudb.io/ics/api/v1/ledger/default/collection/default/documents/search"

@@ -17,23 +17,22 @@ import (
 )
 
 type ImmmuDB struct {
-	url        string
-	apiKey     string
-	readApiKey string
-	searchUrl  string
-	headers    map[string]string
-	mx         sync.Mutex
+	url            string
+	apiKey         string
+	searchUrl      string
+	DefaultHeaders map[string]string
+	mx             sync.Mutex
 }
 
-func NewImmmuDB(url, apiKey, search, searchApiKey string) *ImmmuDB {
+func NewImmmuDB(url, apiKey, searchUrl string) *ImmmuDB {
 	return &ImmmuDB{
-		url:        url,
-		apiKey:     apiKey,
-		searchUrl:  search,
-		readApiKey: searchApiKey,
-		headers: map[string]string{
+		url:       url,
+		apiKey:    apiKey,
+		searchUrl: searchUrl,
+		DefaultHeaders: map[string]string{
 			"accept":       "application/json",
 			"Content-Type": "application/json",
+			"X-API-Key":    apiKey,
 		},
 		mx: sync.Mutex{},
 	}
@@ -54,8 +53,7 @@ func (db *ImmmuDB) doCreateHttpCall(ctx context.Context, input interface{}) (*Cr
 		logrus.WithError(err).Error("http request failed")
 		return nil, err
 	}
-	db.headers["X-API-Key"] = db.apiKey
-	for key, value := range db.headers {
+	for key, value := range db.DefaultHeaders {
 		req.Header.Set(key, value)
 	}
 
@@ -100,8 +98,7 @@ func (db *ImmmuDB) doGetAllHttpCall(ctx context.Context, input interface{}) (*Ge
 		logrus.WithError(err).Error("http request failed")
 		return nil, err
 	}
-	db.headers["X-API-Key"] = db.readApiKey
-	for key, value := range db.headers {
+	for key, value := range db.DefaultHeaders {
 		req.Header.Set(key, value)
 	}
 	client := &http.Client{}
@@ -226,6 +223,7 @@ func (db *ImmmuDB) GetId() uint {
 	return uint(time.Now().UnixNano())
 }
 
+// this is to have optional converting i tried to do this with reflect but i couldn't not get to work as i wanted
 func (db *ImmmuDB) convertModelToAccountInfo(sc interface{}) *models.AccountInfo {
 	jsonString, err := json.Marshal(sc)
 	if err != nil {
