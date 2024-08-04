@@ -29,9 +29,9 @@ Kindly send us your solution by email or share it as a GitHub repository so that
 *Update Persistence to be immudb
 
 Add Tests
-     persistence
-     services
-     handlers-converters
+     *persistence
+     *services
+     *handlers-converters
 *Add FE
 Add Docker and DockerCompose
 Add ReadMe

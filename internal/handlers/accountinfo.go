@@ -81,33 +81,11 @@ func (h *Handler) UpdateAccountInfo(c *gin.Context) {
 	AbortWithMessage(c, http.StatusMethodNotAllowed, fmt.Errorf("method not allowed"), "update  is not allowed")
 }
 
-func convertAccountInfoToDTO(sc *models.AccountInfo) *AccountInfoDto {
-	if sc == nil {
-		return nil
-	}
-	return &AccountInfoDto{
-		AccountNumber: sc.Id,
-		AccountName:   sc.Name,
-		Iban:          sc.Iban,
-		Address:       sc.Address,
-		Amount:        sc.Amount,
-		Type:          sc.Type,
-	}
-}
-
 func bindToAccountInfo(c *gin.Context) (*models.AccountInfo, error) {
 	var input AccountInfoDto
 	err := c.BindJSON(&input)
 	if err != nil {
 		return nil, err
 	}
-	authorData := models.AccountInfo{
-		Id:      input.AccountNumber,
-		Name:    input.AccountName,
-		Iban:    input.Iban,
-		Address: input.Address,
-		Amount:  input.Amount,
-		Type:    input.Type,
-	}
-	return &authorData, nil
+	return convertDtoToAccountInfo(&input), nil
 }
