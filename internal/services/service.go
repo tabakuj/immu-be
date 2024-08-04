@@ -12,10 +12,10 @@ type Service interface {
 	GetAccountInfoById(ctx context.Context, Id uint) (*models.AccountInfo, error)
 }
 
-type service struct {
+type AccountService struct {
 	Db persistance.AccountDB
 }
 
-func NewService(db persistance.AccountDB) (*service, error) {
-	return &service{Db: db}, nil
+func NewService(db persistance.AccountDB) (*AccountService, error) {
+	return &AccountService{Db: db}, nil
 }

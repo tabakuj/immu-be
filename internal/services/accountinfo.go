@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (s *service) CreateAccountInfo(ctx context.Context, data *models.AccountInfo) (*models.AccountInfo, error) {
+func (s *AccountService) CreateAccountInfo(ctx context.Context, data *models.AccountInfo) (*models.AccountInfo, error) {
 	// cancellation check
 	select {
 	case <-ctx.Done():
@@ -21,7 +21,7 @@ func (s *service) CreateAccountInfo(ctx context.Context, data *models.AccountInf
 	return s.Db.CreateAccountInfo(ctx, *data)
 }
 
-func (s *service) GetAllAccountInfos(ctx context.Context, page, pageSize int) ([]*models.AccountInfo, error) {
+func (s *AccountService) GetAllAccountInfos(ctx context.Context, page, pageSize int) ([]*models.AccountInfo, error) {
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
@@ -30,7 +30,7 @@ func (s *service) GetAllAccountInfos(ctx context.Context, page, pageSize int) ([
 	return s.Db.GetAllAccountInfos(ctx, page, pageSize)
 }
 
-func (s *service) GetAccountInfoById(ctx context.Context, Id uint) (*models.AccountInfo, error) {
+func (s *AccountService) GetAccountInfoById(ctx context.Context, Id uint) (*models.AccountInfo, error) {
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
@@ -39,7 +39,7 @@ func (s *service) GetAccountInfoById(ctx context.Context, Id uint) (*models.Acco
 	return s.Db.GetAccountInfoById(ctx, Id)
 }
 
-func (s *service) validateAccount(data *models.AccountInfo) error {
+func (s *AccountService) validateAccount(data *models.AccountInfo) error {
 	if data == nil {
 		return errors.NewServiceError("invalid input", http.StatusBadRequest)
 	}

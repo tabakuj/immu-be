@@ -22,14 +22,17 @@ Kindly send us your solution by email or share it as a GitHub repository so that
 
 
 --------------------
-implement db in-memory layer
-Handlers:
-- Create a Post
-- GetByID and GetAll
-
-Update Persistence to be immudb
+*implement db in-memory layer
+*Handlers:
+*- Create a Post
+*- GetByID and GetAll
+*Update Persistence to be immudb
 
 Add Tests
+     persistence
+     services
+     handlers-converters
+*Add FE
 Add Docker and DockerCompose
 Add ReadMe
 

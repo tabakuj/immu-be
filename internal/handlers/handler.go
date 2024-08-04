@@ -27,7 +27,7 @@ func NewHandler(bookService services.Service, router *gin.Engine) *Handler {
 	SetupHealth(router)
 	v1 := router.Group("/v1/api")
 
-	// register authors
+	// register account
 	v1.GET("/account-info", handler.GetAccountInfos)
 	v1.GET("/account-info/:id", handler.GetAccountInfo)
 	v1.PUT("/account-info/:id", handler.UpdateAccountInfo)

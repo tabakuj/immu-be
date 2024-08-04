@@ -63,7 +63,12 @@ func (db *ImmmuDB) doCreateHttpCall(ctx context.Context, input interface{}) (*Cr
 		logrus.WithError(err).Error("http request failed")
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			logrus.WithError(err).Error("failed to close response body")
+		}
+	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -107,7 +112,12 @@ func (db *ImmmuDB) doGetAllHttpCall(ctx context.Context, input interface{}) (*Ge
 		logrus.WithError(err).Error("http request failed")
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			logrus.WithError(err).Error("failed to close response body")
+		}
+	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
