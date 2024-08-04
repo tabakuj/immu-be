@@ -9,3 +9,13 @@ docker run --name immuapi -p 8080:8080 -it immudb-docker-img
 
 FE:
 
+cd /Users/user/projects/juligo/immuSolution/immufe
+
+docker build --build-arg NEXT_PUBLIC_API_URL="http://host.docker.internal:8080" -t  immu-solution-fe .
+docker rm -f imu-fe
+docker run -it -p 8081:3000 --name imu-fe immu-solution-fe
+
+
+
+--BOTH
+ docker compose up -d
