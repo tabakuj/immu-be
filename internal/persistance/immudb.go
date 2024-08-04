@@ -22,6 +22,7 @@ type ImmmuDB struct {
 	searchUrl      string
 	DefaultHeaders map[string]string
 	mx             sync.Mutex
+	Id             uint
 }
 
 func NewImmmuDB(url, apiKey, searchUrl string) *ImmmuDB {
@@ -35,6 +36,7 @@ func NewImmmuDB(url, apiKey, searchUrl string) *ImmmuDB {
 			"X-API-Key":    apiKey,
 		},
 		mx: sync.Mutex{},
+		Id: uint(time.Now().UnixNano()),
 	}
 }
 
@@ -138,9 +140,9 @@ func (db *ImmmuDB) doGetAllHttpCall(ctx context.Context, input interface{}) (*Ge
 }
 
 func (db *ImmmuDB) CreateAccountInfo(ctx context.Context, data models.AccountInfo) (*models.AccountInfo, error) {
+	data.Id = db.GetId()
 	db.mx.Lock()
 	defer db.mx.Unlock()
-	data.Id = db.GetId()
 	result, err := db.doCreateHttpCall(ctx, data)
 	if err != nil {
 		return nil, err
@@ -230,7 +232,10 @@ func (db *ImmmuDB) GetAccountInfoById(ctx context.Context, Id uint) (*models.Acc
 
 // GetId this does not guarantee uniqueness in case of vertical scaling but for purposes of this looks ok
 func (db *ImmmuDB) GetId() uint {
-	return uint(time.Now().UnixNano())
+	db.mx.Lock()
+	defer db.mx.Unlock()
+	db.Id++
+	return db.Id
 }
 
 // this is to have optional converting i tried to do this with reflect but i couldn't not get to work as i wanted
