@@ -1,0 +1,11 @@
+
+
+BE:
+cd /Users/user/projects/juligo/immuSolution/immudb
+
+docker build  -t immudb-docker-img --build-arg FILEDIR="./config" --build-arg FILENAME="default.yaml" --build-arg TARGETFILENAME="default.yaml" .
+docker rm -f immuapi
+docker run --name immuapi -p 8080:8080 -it immudb-docker-img
+
+FE:
+
