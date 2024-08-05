@@ -1,7 +1,7 @@
 # Notes
 > This application is build using Golang,Gin and ImmuDb vault. I have structured this the same as I would structure i real application.
 > <br/> So it might be a bit over-complicated for this task but pls keep in mind the reason.
-> <br/> In addition I didn't add the pagination as I would be a little complicated on the front-end part of this to implement it
+> <br/> In addition I didn't add the pagination as it would be a little complicated on the front-end part
 > ( if you guys want to see that on this please let me know).
 > <br/>
 > I have taken configuration and secrets from the same place for simplicity.
