@@ -8,14 +8,15 @@
 ---
 
 ### 1. Prerequisites, Run test and Build image
-I assume that Golang is installed on the machine and docker is also installed.
+I assume that Golang and Docker is installed on the machine you are trying to run this from.
 
 * To run test please use the follow:
     ```shell
         #cd path to  solution
         go test -v ./...
     ```
-* We might need to update the configuration setting for this 
+* We might need to update the configuration setting for this <br>
+    `config/default.yaml` is the configuration file.
     ```
     ImmuDbUrl: ""
     ImmuDbApiKey: ""
@@ -42,7 +43,8 @@ The application will run on port 8080, so we need to expose this port. Here, I h
     #docker rm -f immuapi
     docker run --name immuapi -p 8080:8080 -it immudb-docker-img        
     ```
-  * with doccker compose
+  * with doccker compose <br>
+    here the fe docker and be docker will run on 8081 and 8080 ports.
    ```shell
     docker compose up -d    
     ```
