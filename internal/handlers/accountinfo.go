@@ -30,8 +30,8 @@ type AccountInfoDto struct {
 // @Produce      json
 // @Param        page     query    int    false  "Page number"       default(1)
 // @Param        pageSize query    int    false  "Page size"         default(10)
-// @Success      200      {object}  Response "List of account info"
-// @Failure      500      {object} Response  "Internal server error"
+// @Success      200      {object}   Response[[]AccountInfoDto] "List of account info"
+// @Failure      500      {object} Response[string]  "Internal server error"
 // @Router       /account-info [get]
 func (h *Handler) GetAccountInfos(c *gin.Context) {
 	page, err := getQueryParamUInt(c, "page")
@@ -63,9 +63,9 @@ func (h *Handler) GetAccountInfos(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        id   path      int  true  "Account ID"
-// @Success      200  {object}  Response "Account information"
-// @Failure      400  {object}  Response  "Bad request, ID is required"
-// @Failure      500  {object}  Response  "Internal server error"
+// @Success      200  {object}  Response[AccountInfoDto] "Account information"
+// @Failure      400  {object}  Response[string]  "Bad request, ID is required"
+// @Failure      500  {object}  Response[string]  "Internal server error"
 // @Router       /account-info/{id} [get]
 func (h *Handler) GetAccountInfo(c *gin.Context) {
 	id, err := getParamUInt(c, "id")
@@ -89,9 +89,9 @@ func (h *Handler) GetAccountInfo(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        account  body      AccountInfoDto  true  "Account information"
-// @Success      201      {object}  Response "Created account info"
-// @Failure      400      {object}  Response  "Bad request, invalid input"
-// @Failure      500      {object}  Response  "Internal server error"
+// @Success      201      {object}   Response[AccountInfoDto] "Created account info"
+// @Failure      400      {object}  Response[string]  "Bad request, invalid input"
+// @Failure      500      {object}  Response[string]  "Internal server error"
 // @Router       /account-info [post]
 func (h *Handler) CreateAccountInfo(c *gin.Context) {
 	// prepare input
@@ -117,7 +117,7 @@ func (h *Handler) CreateAccountInfo(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        id  path      int  true  "Account ID"
-// @Failure      405 {object}  Response "Method not allowed"
+// @Failure      405 {object}  Response[string] "Method not allowed"
 // @Router       /account-info/{id} [delete]
 func (h *Handler) DeleteAccountInfo(c *gin.Context) {
 	AbortWithMessage(c, http.StatusMethodNotAllowed, fmt.Errorf("method not allowed"), "delete is not allowed")
@@ -132,7 +132,7 @@ func (h *Handler) DeleteAccountInfo(c *gin.Context) {
 // @Produce      json
 // @Param        id      path      int          true  "Account ID"
 // @Param        account body      AccountInfoDto  true  "Updated account information"
-// @Failure      405     {object}  Response "Method not allowed"
+// @Failure      405     {object}  Response[string] "Method not allowed"
 // @Router       /account-info/{id} [put]
 func (h *Handler) UpdateAccountInfo(c *gin.Context) {
 	AbortWithMessage(c, http.StatusMethodNotAllowed, fmt.Errorf("method not allowed"), "update  is not allowed")

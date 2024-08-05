@@ -38,7 +38,8 @@ Add Tests
 *Add ReadMe FE
 *Add git remotes and push everything
 
-Add Swagger
+*Add Swagger
+Add swagger generic response types
 Add ReadMe BE
 AddPagination in another branch
 

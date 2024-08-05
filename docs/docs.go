@@ -53,13 +53,13 @@ const docTemplate = `{
                     "200": {
                         "description": "List of account info",
                         "schema": {
-                            "$ref": "#/definitions/internal_handlers.Response"
+                            "$ref": "#/definitions/internal_handlers.Response-array_internal_handlers_AccountInfoDto"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/internal_handlers.Response"
+                            "$ref": "#/definitions/internal_handlers.Response-string"
                         }
                     }
                 }
@@ -89,19 +89,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created account info",
                         "schema": {
-                            "$ref": "#/definitions/internal_handlers.Response"
+                            "$ref": "#/definitions/internal_handlers.Response-internal_handlers_AccountInfoDto"
                         }
                     },
                     "400": {
                         "description": "Bad request, invalid input",
                         "schema": {
-                            "$ref": "#/definitions/internal_handlers.Response"
+                            "$ref": "#/definitions/internal_handlers.Response-string"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/internal_handlers.Response"
+                            "$ref": "#/definitions/internal_handlers.Response-string"
                         }
                     }
                 }
@@ -131,19 +131,19 @@ const docTemplate = `{
                     "200": {
                         "description": "Account information",
                         "schema": {
-                            "$ref": "#/definitions/internal_handlers.Response"
+                            "$ref": "#/definitions/internal_handlers.Response-internal_handlers_AccountInfoDto"
                         }
                     },
                     "400": {
                         "description": "Bad request, ID is required",
                         "schema": {
-                            "$ref": "#/definitions/internal_handlers.Response"
+                            "$ref": "#/definitions/internal_handlers.Response-string"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/internal_handlers.Response"
+                            "$ref": "#/definitions/internal_handlers.Response-string"
                         }
                     }
                 }
@@ -180,7 +180,7 @@ const docTemplate = `{
                     "405": {
                         "description": "Method not allowed",
                         "schema": {
-                            "$ref": "#/definitions/internal_handlers.Response"
+                            "$ref": "#/definitions/internal_handlers.Response-string"
                         }
                     }
                 }
@@ -208,7 +208,7 @@ const docTemplate = `{
                     "405": {
                         "description": "Method not allowed",
                         "schema": {
-                            "$ref": "#/definitions/internal_handlers.Response"
+                            "$ref": "#/definitions/internal_handlers.Response-string"
                         }
                     }
                 }
@@ -254,10 +254,37 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_handlers.Response": {
+        "internal_handlers.Response-array_internal_handlers_AccountInfoDto": {
             "type": "object",
             "properties": {
-                "data": {},
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_handlers.AccountInfoDto"
+                    }
+                },
+                "error_message": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_handlers.Response-internal_handlers_AccountInfoDto": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/internal_handlers.AccountInfoDto"
+                },
+                "error_message": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_handlers.Response-string": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "string"
+                },
                 "error_message": {
                     "type": "string"
                 }

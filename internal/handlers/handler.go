@@ -14,9 +14,9 @@ type Handler struct {
 	Engine  *gin.Engine
 }
 
-type Response struct {
-	Data interface{} `json:"data"`
-	Err  string      `json:"error_message"`
+type Response[T any] struct {
+	Data T      `json:"data"`
+	Err  string `json:"error_message"`
 }
 
 func NewHandler(bookService services.Service, router *gin.Engine) *Handler {
@@ -47,7 +47,7 @@ func AbortWithMessage(c *gin.Context, status int, err error, message string) {
 		message = err.Error()
 	}
 
-	c.AbortWithStatusJSON(status, Response{
+	c.AbortWithStatusJSON(status, Response[string]{
 		Err: message,
 	})
 }
@@ -64,8 +64,8 @@ func getQueryParamUInt(c *gin.Context, paramName string) (int, error) {
 	return int(idValue), err
 }
 
-func returnOk(c *gin.Context, status int, data interface{}) {
-	c.IndentedJSON(status, Response{
+func returnOk[T any](c *gin.Context, status int, data T) {
+	c.IndentedJSON(status, Response[T]{
 		Data: data,
 	})
 }
