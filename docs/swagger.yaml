@@ -1,4 +1,4 @@
-basePath: /api/v1
+basePath: /v1/api
 definitions:
   immudb_internal_models.AccountType:
     enum:

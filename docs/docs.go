@@ -274,7 +274,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/api/v1",
+	BasePath:         "/v1/api",
 	Schemes:          []string{},
 	Title:            "Immudb Sample",
 	Description:      "This is a sample server that connects with immudb vault stores and receives data from there.",
