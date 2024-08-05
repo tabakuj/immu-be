@@ -1,0 +1,265 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server that connects with immudb vault stores and receives data from there.",
+        "title": "Immudb Sample",
+        "contact": {
+            "name": "Julian Tabaku",
+            "email": "julian.tabaku@outlook.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/account-info": {
+            "get": {
+                "description": "Retrieve a paginated list of all account information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get all account infos",
+                "operationId": "get-all-account-infos",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Page size",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of account info",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add a new account information entry",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create account info",
+                "operationId": "create-account-info",
+                "parameters": [
+                    {
+                        "description": "Account information",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.AccountInfoDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created account info",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request, invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/account-info/{id}": {
+            "get": {
+                "description": "Retrieve account information for a specific account by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get account info by ID",
+                "operationId": "get-account-info-by-id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account information",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request, ID is required",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update account information for a specific account by ID (currently not allowed)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update account info",
+                "operationId": "update-account-info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated account information",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.AccountInfoDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "405": {
+                        "description": "Method not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete account information for a specific account by ID (currently not allowed)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete account info",
+                "operationId": "delete-account-info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "405": {
+                        "description": "Method not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handlers.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "immudb_internal_models.AccountType": {
+            "type": "integer",
+            "enum": [
+                1,
+                2
+            ],
+            "x-enum-comments": {
+                "Receiving": "2",
+                "Sending": "1"
+            },
+            "x-enum-varnames": [
+                "Sending",
+                "Receiving"
+            ]
+        },
+        "internal_handlers.AccountInfoDto": {
+            "type": "object",
+            "properties": {
+                "account_name": {
+                    "type": "string"
+                },
+                "account_number": {
+                    "type": "integer"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "iban": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/immudb_internal_models.AccountType"
+                }
+            }
+        },
+        "internal_handlers.Response": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "error_message": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}

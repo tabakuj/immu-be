@@ -33,6 +33,13 @@ Add Tests
      *services
      *handlers-converters
 *Add FE
-Add Docker and DockerCompose
-Add ReadMe
+*Add Docker and DockerCompose
+*Recheck FE Work
+*Add ReadMe FE
+*Add git remotes and push everything
 
+Add Swagger
+Add ReadMe BE
+AddPagination in another branch
+
+Recheck and send the email

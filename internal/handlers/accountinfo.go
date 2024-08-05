@@ -21,6 +21,18 @@ type AccountInfoDto struct {
 	Type          *models.AccountType `json:"type"`
 }
 
+// GetAccountInfos lists all existing accounts
+//
+// @Summary      Get all account infos
+// @Description  Retrieve a paginated list of all account information
+// @ID           get-all-account-infos
+// @Accept       json
+// @Produce      json
+// @Param        page     query    int    false  "Page number"       default(1)
+// @Param        pageSize query    int    false  "Page size"         default(10)
+// @Success      200      {object}  Response "List of account info"
+// @Failure      500      {object} Response  "Internal server error"
+// @Router       /account-info [get]
 func (h *Handler) GetAccountInfos(c *gin.Context) {
 	page, err := getQueryParamUInt(c, "page")
 	if err != nil {
@@ -43,6 +55,18 @@ func (h *Handler) GetAccountInfos(c *gin.Context) {
 	returnOk(c, http.StatusOK, output)
 }
 
+// GetAccountInfo
+//
+// @Summary      Get account info by ID
+// @Description  Retrieve account information for a specific account by ID
+// @ID           get-account-info-by-id
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object}  Response "Account information"
+// @Failure      400  {object}  Response  "Bad request, ID is required"
+// @Failure      500  {object}  Response  "Internal server error"
+// @Router       /account-info/{id} [get]
 func (h *Handler) GetAccountInfo(c *gin.Context) {
 	id, err := getParamUInt(c, "id")
 	if err != nil {
@@ -57,10 +81,18 @@ func (h *Handler) GetAccountInfo(c *gin.Context) {
 	returnOk(c, http.StatusOK, convertAccountInfoToDTO(result))
 }
 
-func (h *Handler) DeleteAccountInfo(c *gin.Context) {
-	AbortWithMessage(c, http.StatusMethodNotAllowed, fmt.Errorf("method not allowed"), "delete is not allowed")
-}
-
+// CreateAccountInfo
+//
+// @Summary      Create account info
+// @Description  Add a new account information entry
+// @ID           create-account-info
+// @Accept       json
+// @Produce      json
+// @Param        account  body      AccountInfoDto  true  "Account information"
+// @Success      201      {object}  Response "Created account info"
+// @Failure      400      {object}  Response  "Bad request, invalid input"
+// @Failure      500      {object}  Response  "Internal server error"
+// @Router       /account-info [post]
 func (h *Handler) CreateAccountInfo(c *gin.Context) {
 	// prepare input
 	input, err := bindToAccountInfo(c)
@@ -77,6 +109,31 @@ func (h *Handler) CreateAccountInfo(c *gin.Context) {
 	returnOk(c, http.StatusCreated, convertAccountInfoToDTO(data))
 }
 
+// DeleteAccountInfo
+//
+// @Summary      Delete account info
+// @Description  Delete account information for a specific account by ID (currently not allowed)
+// @ID           delete-account-info
+// @Accept       json
+// @Produce      json
+// @Param        id  path      int  true  "Account ID"
+// @Failure      405 {object}  Response "Method not allowed"
+// @Router       /account-info/{id} [delete]
+func (h *Handler) DeleteAccountInfo(c *gin.Context) {
+	AbortWithMessage(c, http.StatusMethodNotAllowed, fmt.Errorf("method not allowed"), "delete is not allowed")
+}
+
+// UpdateAccountInfo
+//
+// @Summary      Update account info
+// @Description  Update account information for a specific account by ID (currently not allowed)
+// @ID           update-account-info
+// @Accept       json
+// @Produce      json
+// @Param        id      path      int          true  "Account ID"
+// @Param        account body      AccountInfoDto  true  "Updated account information"
+// @Failure      405     {object}  Response "Method not allowed"
+// @Router       /account-info/{id} [put]
 func (h *Handler) UpdateAccountInfo(c *gin.Context) {
 	AbortWithMessage(c, http.StatusMethodNotAllowed, fmt.Errorf("method not allowed"), "update  is not allowed")
 }

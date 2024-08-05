@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"immudb/docs"
 	"immudb/internal/configuration"
 	"immudb/internal/handlers"
 	"immudb/internal/persistance"
@@ -17,7 +20,8 @@ type Server struct {
 func NewServer(config *configuration.ApplicationConfiguration) (*Server, error) {
 	router := gin.Default()
 	router.Use(handlers.CORSMiddleware())
-
+	docs.SwaggerInfo.Schemes = []string{"http"}
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	db := persistance.NewImmmuDB(config.ImmuDbUrl, config.ImmuDbApiKey, config.ImmudbSearchUrl)
 
 	accountService, err := services.NewService(db)

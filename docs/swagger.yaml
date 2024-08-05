@@ -1,0 +1,182 @@
+basePath: /api/v1
+definitions:
+  immudb_internal_models.AccountType:
+    enum:
+    - 1
+    - 2
+    type: integer
+    x-enum-comments:
+      Receiving: "2"
+      Sending: "1"
+    x-enum-varnames:
+    - Sending
+    - Receiving
+  internal_handlers.AccountInfoDto:
+    properties:
+      account_name:
+        type: string
+      account_number:
+        type: integer
+      address:
+        type: string
+      amount:
+        type: number
+      iban:
+        type: string
+      type:
+        $ref: '#/definitions/immudb_internal_models.AccountType'
+    type: object
+  internal_handlers.Response:
+    properties:
+      data: {}
+      error_message:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8080
+info:
+  contact:
+    email: julian.tabaku@outlook.com
+    name: Julian Tabaku
+  description: This is a sample server that connects with immudb vault stores and
+    receives data from there.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Immudb Sample
+  version: "1.0"
+paths:
+  /account-info:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a paginated list of all account information
+      operationId: get-all-account-infos
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Page size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of account info
+          schema:
+            $ref: '#/definitions/internal_handlers.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.Response'
+      summary: Get all account infos
+    post:
+      consumes:
+      - application/json
+      description: Add a new account information entry
+      operationId: create-account-info
+      parameters:
+      - description: Account information
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.AccountInfoDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created account info
+          schema:
+            $ref: '#/definitions/internal_handlers.Response'
+        "400":
+          description: Bad request, invalid input
+          schema:
+            $ref: '#/definitions/internal_handlers.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.Response'
+      summary: Create account info
+  /account-info/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete account information for a specific account by ID (currently
+        not allowed)
+      operationId: delete-account-info
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "405":
+          description: Method not allowed
+          schema:
+            $ref: '#/definitions/internal_handlers.Response'
+      summary: Delete account info
+    get:
+      consumes:
+      - application/json
+      description: Retrieve account information for a specific account by ID
+      operationId: get-account-info-by-id
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Account information
+          schema:
+            $ref: '#/definitions/internal_handlers.Response'
+        "400":
+          description: Bad request, ID is required
+          schema:
+            $ref: '#/definitions/internal_handlers.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/internal_handlers.Response'
+      summary: Get account info by ID
+    put:
+      consumes:
+      - application/json
+      description: Update account information for a specific account by ID (currently
+        not allowed)
+      operationId: update-account-info
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated account information
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.AccountInfoDto'
+      produces:
+      - application/json
+      responses:
+        "405":
+          description: Method not allowed
+          schema:
+            $ref: '#/definitions/internal_handlers.Response'
+      summary: Update account info
+swagger: "2.0"

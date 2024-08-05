@@ -19,3 +19,10 @@ docker run -it -p 8081:3000 --name imu-fe immu-solution-fe
 
 --BOTH
  docker compose up -d
+
+
+-- Generate swagger docs:
+swag init -pd -g cmd/*.go
+
+swagger url:
+http://localhost:8080/swagger/index.html
